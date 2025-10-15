@@ -100,7 +100,6 @@ select, .btn{
 }
 
 .btn.primary{
-  /* box-shadow:0 8px 24px #dd9b20cc !important; */
   margin-top: 8px;
   border:none
 }
@@ -113,8 +112,6 @@ select, .btn{
 }
 
 option{
-  /* background-color: rgba(255, 174, 0, 0.356); */
-  /* background: linear-gradient(45deg, #ff6c00, #dc2626); */
   font-family: "Verdana", "Helvetica", "Arial", sans-serif;
   color: #000;
 }
@@ -129,6 +126,8 @@ option{
 
 input#chord-length{
   border-radius: 8px;
+  color: var(--accent);
+  font-weight: bold;
 }
 
 .chord-root{
@@ -261,6 +260,13 @@ button#next-manual{
   box-shadow:0 6px 20px rgba(34, 197, 94, 0.6) !important
 }
 
+#chord-instruction {
+    font-weight: bold;
+    font-size: 16px;
+    color: #dd9b20;
+    text-shadow: #dd9b20cc 1px 0 10px;
+}
+
 .controls-row{
   display:flex;
   gap:8px;
@@ -370,7 +376,7 @@ footer{
       <section id="intervals" class="card" style="display:none">
         <div class="trainer-top">
           <div>
-            <div class="instruction" id="instruction">Instruction</div>
+            <div class="instruction" id="instruction">Trouve l'intervalle : <span id="chord-instruction">Note</span></div>
             <div class="score" id="score">Bonnes réponses : 0 / Essais : 0</div>
           </div>
           <div class="controls-row">
@@ -482,7 +488,7 @@ class ChordGenerator{
     this.listEl.innerHTML='';
     for(const c of chords){
       const node = document.createElement('div'); node.className='chord-item';
-      node.innerHTML = `<div class="chord-root">${c.displayRoot} ${c.abbr? c.abbr : ''}</div><div class="chord-type">${c.typeName}</div>`;
+      node.innerHTML = `<div class="chord-root">${c.displayRoot} ${c.abbr? c.abbr : ''}</div>`;
       this.listEl.appendChild(node);
     }
   }
@@ -627,8 +633,17 @@ class IntervalTrainer{
   }
   
   updateInstruction(){
-    const instr = document.getElementById('instruction');
-    instr.textContent = `Trouve l'intervalle : ${this.intervalName(this.current.interval)}`;
+    const instr = document.getElementById('chord-instruction');
+
+    // const startNote = this.noteEls[startMidi].dataset.note;
+    const startMidi = this.current.start;
+    // const targetMidi = this.current.answerMidi;
+
+    // On récupère la note via midiToNote
+    const startNote = midiToNote(startMidi).nameSharp;
+    // const targetNote = midiToNote(targetMidi).nameSharp;
+
+    instr.textContent = `${startNote} ${this.intervalName(this.current.interval)}`;
   }
   
   markPlaying(el){
