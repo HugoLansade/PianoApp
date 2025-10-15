@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chord & Interval Trainer</title>
+  <style>
+ :root{
+  --bg:#0f1724; 
+  --card:#0b1220; 
+  --muted:#9aa4b2; 
+  --accent:#7dd3fc; 
+  --good:#16a34a; 
+  --bad:#ef4444; 
+  --glass: rgba(255,255,255,0.03);
+  --radius:14px; 
+  --soft-shadow: 0 6px 18px rgba(2,6,23,0.6);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+*{
+  box-sizing:border-box
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  background:linear-gradient(180deg,#071427 0%, #08101a 100%);
+  color:#e6eef6
+}
+
+.app{
+  max-width:1100px;
+  margin:28px auto;
+  padding:20px;
+}
+
+header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:18px;
+  flex-wrap: wrap;
+}
+
+h1{
+  font-size:20px;
+  margin:0
+}
+
+.menu{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-left:auto
+}
+
+.menu button{
+  background:transparent;
+  border:1px solid var(--glass);
+  padding:8px 12px;
+  border-radius:10px;
+  color:var(--muted);
+  cursor:pointer
+}
+
+.menu button.active{
+  background:linear-gradient(90deg,rgba(125,211,252,0.08),rgba(125,211,252,0.02));
+  border-color:rgba(125,211,252,0.18);
+  color:var(--accent)
+}
+
+main{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px
+}
+
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--soft-shadow)
+}
+
+/* Chord generator */
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center
+}
+
+select, .btn{
+  padding:8px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:transparent;
+  color:inherit
+}
+
+.btn.primary{
+  /* box-shadow:0 8px 24px #dd9b20cc !important; */
+  margin-top: 8px;
+  border:none
+}
+
+.chord-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:12px
+}
+
+option{
+  /* background-color: rgba(255, 174, 0, 0.356); */
+  /* background: linear-gradient(45deg, #ff6c00, #dc2626); */
+  font-family: "Verdana", "Helvetica", "Arial", sans-serif;
+  color: #000;
+}
+
+.chord-item{
+  min-width:120px;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.02);
+}
+
+input#chord-length{
+  border-radius: 8px;
+}
+
+.chord-root{
+  font-weight:700;
+  font-size:18px
+}
+
+.chord-type{
+  font-size:13px;
+  color:var(--muted)
+}
+
+/* Piano */
+.trainer-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap: wrap
+}
+
+.instruction{
+  font-size:16px
+}
+
+.score{
+  color:var(--muted)
+}
+
+.keyboard{
+  width:100%;
+  max-width:900px;
+  margin:14px auto;
+  position:relative;
+  height:200px;
+  user-select:none;
+  display:flex
+}
+
+.octave{
+  display:flex;
+  position:relative;
+  flex:1
+}
+
+.key{
+  cursor:pointer;
+  transition:all .08s ease;
+  border:1px solid rgba(0,0,0,0.2)
+}
+
+.key:active{
+  transform:translateY(2px)
+}
+
+.white{
+  width:100%;
+  height:100%;
+  background:linear-gradient(to bottom, #fafafa 0%, #f0f0f0 100%);
+  border-radius:0 0 4px 4px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.15);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:10px;
+  font-size:13px;
+  color:#444
+}
+
+.black{
+  position:absolute;
+  top:0;
+  height:58%;
+  width:58%;
+  background:linear-gradient(to bottom, #1a1a1a 0%, #000 100%);
+  border-radius:0 0 4px 4px;
+  box-shadow:0 6px 12px rgba(0,0,0,0.7);
+  z-index:10;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:6px;
+  font-size:11px;
+  color:#666
+}
+
+.black-1{
+  left:64%
+}
+
+.black-2{
+  left:78%
+}
+
+.black-4{
+  left:60%
+}
+
+.black-5{
+  left:72%
+}
+
+.black-6{
+  left:84%
+}
+
+.key-label{
+  font-size:12px;
+  color:var(--muted)
+}
+
+.playing{
+  box-shadow:0 8px 24px #dd9b20cc !important;
+  background:rgb(221, 155, 32) !important;
+  transform:translateY(2px) !important
+}
+
+.correct{
+  background:linear-gradient(to bottom, rgb(96 255 0), rgb(22, 163, 74)) !important;
+  box-shadow:0 6px 20px rgba(34, 197, 94, 0.6) !important
+}
+
+.wrong{
+  background:linear-gradient(to bottom, rgb(255 108 0), rgb(220, 38, 38)) !important;
+  box-shadow:0 6px 20px rgba(239, 68, 68, 0.6) !important
+}
+
+button#next-manual{
+  background:linear-gradient(to bottom, rgb(96 255 0), rgb(22, 163, 74)) !important;
+  box-shadow:0 6px 20px rgba(34, 197, 94, 0.6) !important
+}
+
+.controls-row{
+  display:flex;
+  gap:8px;
+  align-items:center
+}
+
+footer{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:13px;
+  text-align:center
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.rotate {
+  animation: rotate 0.8s ease-in-out; /* vitesse réglable */
+}
+
+
+@media (min-width:900px){
+  main{
+    grid-template-columns:1fr 1fr
+  }
+}
+
+@media (max-width:720px){
+  .keyboard{
+    height:120px
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Chord & Interval Trainer</h1>
+      <div class="menu">
+        <button id="menu-chords" class="active">🎵 Générateur d'accords</button>
+        <button id="menu-intervals">🎹 Entraînement intervalles</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Chord generator component -->
+      <section id="chords" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap: wrap">
+          <div>
+            <strong>Générateur de partitions d'accords</strong>
+            <!-- <div style="color:var(--muted);font-size:13px">Choisissez une catégorie puis cliquez sur "Nouvelle partition"</div> -->
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap: wrap;align-items:center">
+            <select id="chord-category">
+              <!-- categories injected by JS -->
+            </select>
+            <input id="chord-length" type="number" min="1" max="12" value="4" style="width:72px" title="Nombre d'accords" />
+            <button class="btn primary" id="new-partition">
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 95 80" fill="none">
+                <path d="M20.8371 38.3514C19.1738 38.3624 17.8191 37.0182 17.8172 35.3549L17.7935 14.7558C17.7904 12.087 21.0121 10.743 22.9065 12.6228L43.5289 33.0853C45.4233 34.965 44.1045 38.1971 41.4358 38.2148L20.8371 38.3514Z" fill="#7DD3FC"/>
+                <path d="M73.6839 41.4349C75.3471 41.4274 76.699 42.7745 76.6974 44.4378L76.6773 65.037C76.6747 67.7057 73.4502 69.0428 71.5597 67.1591L50.9809 46.6528C49.0905 44.769 50.4162 41.5398 53.0849 41.5277L73.6839 41.4349Z" fill="#7DD3FC"/>
+                <path d="M73 38.2363C73 32.6486 71.1646 27.2155 67.776 22.7724C64.3874 18.3293 59.6333 15.1223 54.2445 13.6444C48.8557 12.1665 43.1306 12.4995 37.9496 14.5923C32.7685 16.6851 28.4182 20.4217 25.5677 25.2277L34.6642 30.6231C36.3325 27.8104 38.8785 25.6236 41.9107 24.3988C44.9429 23.174 48.2934 22.9791 51.4472 23.8441C54.6009 24.709 57.3833 26.5859 59.3664 29.1862C61.3496 31.7864 62.4237 34.9661 62.4237 38.2363H73Z" fill="#7DD3FC"/>
+                <path d="M22.0078 41.7378C22.0078 47.3256 23.8432 52.7587 27.2318 57.2017C30.6204 61.6448 35.3745 64.8518 40.7633 66.3297C46.1521 67.8076 51.8772 67.4746 57.0583 65.3818C62.2393 63.289 66.5896 59.5524 69.4401 54.7464L60.3436 49.351C58.6753 52.1637 56.1293 54.3505 53.0972 55.5753C50.065 56.8001 46.7144 56.995 43.5606 56.1301C40.4069 55.2651 37.6245 53.3882 35.6414 50.788C33.6582 48.1877 32.5841 45.008 32.5841 41.7378L22.0078 41.7378Z" fill="#7DD3FC"/>
+              </svg> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 95 80" fill="none">
+                <g filter="url(#filter0_d_2977_58)">
+                <mask id="path-1-inside-1_2977_58" fill="white">
+                <path d="M72.998 38.2368C72.998 32.649 71.1627 27.2159 67.7741 22.7729C64.3855 18.3298 59.6313 15.1228 54.2425 13.6449C48.8537 12.167 43.1287 12.5 37.9476 14.5928C32.7665 16.6856 28.4163 20.4222 25.5657 25.2282L34.6623 30.6236C36.3306 27.8109 38.8765 25.6241 41.9087 24.3993C44.9409 23.1745 48.2915 22.9796 51.4452 23.8445C54.599 24.7095 57.3813 26.5864 59.3645 29.1866C61.3476 31.7869 62.4218 34.9666 62.4218 38.2368H72.998Z"/>
+                </mask>
+                <path d="M72.998 38.2368C72.998 32.649 71.1627 27.2159 67.7741 22.7729C64.3855 18.3298 59.6313 15.1228 54.2425 13.6449C48.8537 12.167 43.1287 12.5 37.9476 14.5928C32.7665 16.6856 28.4163 20.4222 25.5657 25.2282L34.6623 30.6236C36.3306 27.8109 38.8765 25.6241 41.9087 24.3993C44.9409 23.1745 48.2915 22.9796 51.4452 23.8445C54.599 24.7095 57.3813 26.5864 59.3645 29.1866C61.3476 31.7869 62.4218 34.9666 62.4218 38.2368H72.998Z" fill="#7DD3FC" stroke="#00B3FF" stroke-width="2" mask="url(#path-1-inside-1_2977_58)"/>
+                <mask id="path-2-inside-2_2977_58" fill="white">
+                <path d="M22.0059 41.7383C22.0059 47.3261 23.8413 52.7591 27.2298 57.2022C30.6184 61.6453 35.3726 64.8523 40.7614 66.3302C46.1502 67.8081 51.8752 67.4751 57.0563 65.3823C62.2374 63.2895 66.5876 59.5529 69.4382 54.7469L60.3416 49.3515C58.6733 52.1642 56.1274 54.351 53.0952 55.5758C50.063 56.8006 46.7125 56.9955 43.5587 56.1305C40.4049 55.2656 37.6226 53.3887 35.6394 50.7884C33.6563 48.1882 32.5821 45.0085 32.5821 41.7383L22.0059 41.7383Z"/>
+                </mask>
+                <path d="M22.0059 41.7383C22.0059 47.3261 23.8413 52.7591 27.2298 57.2022C30.6184 61.6453 35.3726 64.8523 40.7614 66.3302C46.1502 67.8081 51.8752 67.4751 57.0563 65.3823C62.2374 63.2895 66.5876 59.5529 69.4382 54.7469L60.3416 49.3515C58.6733 52.1642 56.1274 54.351 53.0952 55.5758C50.063 56.8006 46.7125 56.9955 43.5587 56.1305C40.4049 55.2656 37.6226 53.3887 35.6394 50.7884C33.6563 48.1882 32.5821 45.0085 32.5821 41.7383L22.0059 41.7383Z" fill="#7DD3FC" stroke="#00B3FF" stroke-width="2" mask="url(#path-2-inside-2_2977_58)"/>
+                <path d="M20.8317 37.8516C19.4459 37.8608 18.3172 36.7406 18.3154 35.3547L18.2911 14.7554C18.2886 12.5315 20.9737 11.4111 22.5524 12.9772L43.1749 33.4398C44.7536 35.0063 43.6539 37.7001 41.43 37.7148L20.8317 37.8516Z" fill="#7DD3FC" stroke="#00B3FF"/>
+                <path d="M73.6842 41.9352C75.0701 41.929 76.1964 43.0515 76.1953 44.4374L76.1757 65.0368C76.1736 67.2606 73.486 68.3754 71.9107 66.8059L51.3317 46.2995C49.7564 44.7297 50.8618 42.0382 53.0857 42.0282L73.6842 41.9352Z" fill="#7DD3FC" stroke="#00B3FF"/>
+                <rect x="29.3281" y="21.7993" width="2.07925" height="8.59769" transform="rotate(-44.5531 29.3281 21.7993)" fill="#7DD3FC"/>
+                <rect x="57.7383" y="53.9766" width="2.07925" height="8.57069" transform="rotate(-42.3691 57.7383 53.9766)" fill="#7DD3FC"/>
+                </g>
+                <defs>
+                <filter id="filter0_d_2977_58" x="13.691" y="7.64609" width="69.1043" height="66.4944" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset dx="1" dy="1"/>
+                <feGaussianBlur stdDeviation="2.55"/>
+                <feComposite in2="hardAlpha" operator="out"/>
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.698039 0 0 0 0 1 0 0 0 1 0"/>
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2977_58"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2977_58" result="shape"/>
+                </filter>
+                </defs>
+              </svg>
+            </button><!--Nouvelle partition -->             
+          </div>
+        </div>
+
+        <div class="chord-list" id="chord-list" aria-live="polite" style="margin-top:14px"></div>
+      </section>
+
+      <!-- Interval trainer component -->
+      <section id="intervals" class="card" style="display:none">
+        <div class="trainer-top">
+          <div>
+            <div class="instruction" id="instruction">Instruction</div>
+            <div class="score" id="score">Bonnes réponses : 0 / Essais : 0</div>
+          </div>
+          <div class="controls-row">
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="btn" id="next-manual" style="display:none">Suivant</button>
+            </div>
+            <!-- <button class="btn" id="reset-score">🔁</button> -->
+          </div>
+        </div>
+
+        <div class="keyboard" id="keyboard" aria-hidden="false"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+ /* ---------- Music helpers ---------- */
+const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NOTES_FLAT  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+
+function midiToNote(m){
+  const octave = Math.floor(m/12) - 1;
+  const nameSharp = NOTES_SHARP[m%12];
+  const nameFlat = NOTES_FLAT[m%12];
+  return {midi:m, nameSharp, nameFlat, octave, label: `${nameSharp}${octave}`};
+}
+
+function noteToMidi(name){
+  // Accept forms like C#4 or Db3
+  const m = name.match(/^([A-Ga-g])([#b]?)(\d+)$/);
+  if(!m) return null;
+  const pitch = m[1].toUpperCase(); const acc = m[2]||''; const oct = parseInt(m[3],10);
+  let idx = ['C','D','E','F','G','A','B'].indexOf(pitch);
+  const base = {C:0,D:2,E:4,F:5,G:7,A:9,B:11}[pitch];
+  let semis = base + (acc==='#'?1:acc==='♭'?-1:0);
+  return (oct+1)*12 + ((semis%12)+12)%12;
+}
+
+/* ---------- Chord data ---------- */
+const CHORD_TYPES = {
+  'Triade majeure':{abbr:'maj', intervals:[0,4,7]},
+  'Triade mineure':{abbr:'min', intervals:[0,3,7]},
+  '7e majeure':{abbr:'maj7', intervals:[0,4,7,11]},
+  '7e mineure':{abbr:'m7', intervals:[0,3,7,10]},
+  '6e':{abbr:'6', intervals:[0,4,7,9]},
+  'sus2':{abbr:'sus2', intervals:[0,2,7]},
+  'sus4':{abbr:'sus4', intervals:[0,5,7]},
+  'aug':{abbr:'aug', intervals:[0,4,8]},
+  'dim':{abbr:'dim', intervals:[0,3,6]},
+  'dominant 7e':{abbr:'7', intervals:[0,4,7,10]}
+};
+
+// Category presets
+const CATEGORIES = {
+  'Triades majeures': ['Triade majeure'],
+  'Triades mineures': ['Triade mineure'],
+  'Accords de 7e majeurs': ['7e majeure'],
+  'Accords de 7e mineurs': ['7e mineure'],
+  'Mix triades majeures et mineures': ['Triade majeure','Triade mineure'],
+  'Mix accords de 7e': ['7e majeure','7e mineure'],
+  'Mix 7e et dominant': ['7e majeure','7e mineure','dominant 7e'],
+  'Mix aug et dim': ['aug','dim'],
+  'Mix de tout': Object.keys(CHORD_TYPES)
+};
+
+const ROOTS = (()=>{
+  // Create list of possible roots from C to B including accidentals (use sharps for convenience)
+  const roots = [];
+  for(let i=0;i<12;i++) roots.push(NOTES_SHARP[i]);
+  return roots;
+})();
+
+/* ---------- UI: Chord generator ---------- */
+class ChordGenerator{
+  constructor(listEl){
+    this.listEl = listEl;
+    this.populateCategories();
+  }
+  populateCategories(){
+    const sel = document.getElementById('chord-category');
+    sel.innerHTML = '';
+    for(const k of Object.keys(CATEGORIES)){
+      const opt = document.createElement('option'); opt.value = k; opt.textContent = k; sel.appendChild(opt);
+    }
+  }
+  generate(category, length){
+    const types = CATEGORIES[category] || [category];
+    const chords = [];
+    for(let i=0;i<length;i++){
+      const root = ROOTS[Math.floor(Math.random()*ROOTS.length)];
+      const typeName = types[Math.floor(Math.random()*types.length)];
+      const type = CHORD_TYPES[typeName];
+      const displayRoot = this.formatRoot(root);
+      chords.push({root, displayRoot, typeName, abbr:type ? type.abbr : '', intervals:type?type.intervals:[]});
+    }
+    this.render(chords);
+  }
+  formatRoot(root){
+    // Show both enharmonic if applicable (C# / Db)
+    const idx = NOTES_SHARP.indexOf(root);
+    if(idx===-1) return root;
+    const flat = NOTES_FLAT[idx];
+    // Modify code to avoid having twice the same chord, favorise to bemol flat
+    if(root.includes('#')) return `${flat}`;
+    return root;
+  }
+  render(chords){
+    this.listEl.innerHTML='';
+    for(const c of chords){
+      const node = document.createElement('div'); node.className='chord-item';
+      node.innerHTML = `<div class="chord-root">${c.displayRoot} ${c.abbr? c.abbr : ''}</div><div class="chord-type">${c.typeName}</div>`;
+      this.listEl.appendChild(node);
+    }
+  }
+}
+
+/* ---------- Interval trainer ---------- */
+class IntervalTrainer{
+  constructor(keyboardEl){
+    this.el = keyboardEl;
+    this.minMidi = noteToMidi('C3'); // C3
+    this.maxMidi = noteToMidi('C5'); // C5
+    this.octaves = [];
+    this.onAnswer = null;
+    this.buildKeyboard();
+    this.setupAudio();
+    this.correct=0; this.attempts=0;
+    this.current = null;
+    this.awaitingAcknowledgement = false;
+  }
+  
+  buildKeyboard(){
+    this.noteEls = {};
+    
+    // Structure: 2 octaves + 1 note (C3 to C5)
+    const octaves = [
+      {start: 48, label: '3'}, // C3 to B3
+      {start: 60, label: '4'}  // C4 to B4
+    ];
+    
+    octaves.forEach(octave => {
+      const octaveDiv = document.createElement('div');
+      octaveDiv.className = 'octave';
+      
+      // White keys structure for one octave
+      const whiteKeys = [
+        {midi: octave.start, name: 'C', hasBlack: true, blackPos: 'black-1'},
+        {midi: octave.start + 2, name: 'D', hasBlack: true, blackPos: 'black-2'},
+        {midi: octave.start + 4, name: 'E', hasBlack: false},
+        {midi: octave.start + 5, name: 'F', hasBlack: true, blackPos: 'black-4'},
+        {midi: octave.start + 7, name: 'G', hasBlack: true, blackPos: 'black-5'},
+        {midi: octave.start + 9, name: 'A', hasBlack: true, blackPos: 'black-6'},
+        {midi: octave.start + 11, name: 'B', hasBlack: false}
+      ];
+      
+      whiteKeys.forEach(wKey => {
+        const whiteDiv = document.createElement('div');
+        whiteDiv.style.position = 'relative';
+        whiteDiv.style.flex = '1';
+        whiteDiv.style.height = '100%';
+        
+        const white = document.createElement('div');
+        white.className = 'key white';
+        white.dataset.midi = wKey.midi;
+        white.dataset.note = `${wKey.name}${octave.label}`;
+        whiteDiv.appendChild(white);
+        this.noteEls[wKey.midi] = white;
+        
+        // Add black key if needed
+        if (wKey.hasBlack) {
+          const blackMidi = wKey.midi + 1;
+          const black = document.createElement('div');
+          black.className = `key black ${wKey.blackPos}`;
+          black.dataset.midi = blackMidi;
+          const blackName = midiToNote(blackMidi).nameFlat;
+          black.dataset.note = `${blackName}${octave.label}`;
+          whiteDiv.appendChild(black);
+          this.noteEls[blackMidi] = black;
+        }
+        
+        octaveDiv.appendChild(whiteDiv);
+      });
+      
+      this.el.appendChild(octaveDiv);
+    });
+    
+    // Add final C5
+    const lastOctaveDiv = this.el.querySelectorAll('.octave')[this.el.querySelectorAll('.octave').length - 1];
+    const c5Div = document.createElement('div');
+    c5Div.style.position = 'relative';
+    c5Div.style.flex = '1';
+    c5Div.style.height = '100%';
+
+    const c5 = document.createElement('div');
+    c5.className = 'key white';
+    c5.dataset.midi = 72;
+    c5.dataset.note = 'C5';
+    c5Div.appendChild(c5);
+    this.noteEls[72] = c5;
+    lastOctaveDiv.appendChild(c5Div);
+    
+    // Attach click events
+    this.el.querySelectorAll('.key').forEach(k => {
+      k.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.onKeyClick(parseInt(k.dataset.midi));
+      });
+    });
+  }
+  
+  setupAudio(){
+    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  
+  playMidi(midi,duration=1.2){
+    if(!this.audioCtx) return;
+    const now = this.audioCtx.currentTime;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+    osc.type='sine';
+    const freq = 440 * Math.pow(2,(midi-69)/12);
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.18, now+0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now+duration);
+    osc.connect(gain); gain.connect(this.audioCtx.destination);
+    osc.start(now); osc.stop(now+duration+0.05);
+  }
+  
+  randomInterval(){
+    const intervals = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+    return intervals[Math.floor(Math.random()*intervals.length)];
+  }
+  
+  intervalName(i){
+    const names = {0:'unisson',1:'half step',2:'whole step',3:'min 3rd',4:'maj 3rd',5:'4th',6:'tritone',7:'5th',8:'min 6th',9:'maj 6th',10:'min 7th',11:'maj 7th',12:'octave'};
+    return names[i] || i+" semitones";
+  }
+  
+  startNew(difficulty='normal'){
+    if(this.awaitingAcknowledgement) return;
+    // choose random start note such that target within range
+    const interval = this.randomInterval();
+    // choose start so that start+interval between min and max
+    const minStart = this.minMidi;
+    const maxStart = this.maxMidi - interval;
+    const start = Math.floor(Math.random()*(maxStart-minStart+1)) + minStart;
+    this.current = {start, interval, answerMidi:start+interval};
+    this.updateInstruction();
+    // highlight start key
+    this.clearHighlights();
+    const startEl = this.noteEls[this.current.start]; if(startEl) this.markPlaying(startEl);
+  }
+  
+  updateInstruction(){
+    const instr = document.getElementById('instruction');
+    instr.textContent = `Trouve l'intervalle : ${this.intervalName(this.current.interval)}`;
+  }
+  
+  markPlaying(el){
+    this.clearHighlights(); el.classList.add('playing');
+    // play start tone
+    this.playMidi(parseInt(el.dataset.midi), 0.9);
+  }
+  
+  clearHighlights(){
+    Object.values(this.noteEls).forEach(k=>{k.classList.remove('playing','correct','wrong')});
+  }
+  
+  onKeyClick(midi){
+    if(!this.current) return;
+    const el = this.noteEls[midi];
+    // play tone
+    this.playMidi(midi,0.9);
+    if(this.awaitingAcknowledgement) return; // wait for click on J'ai compris
+    if(midi === this.current.answerMidi){
+      // correct
+      el.classList.add('correct');
+      this.correct++; this.attempts++;
+      this.updateScore();
+      // auto next after short delay
+      setTimeout(()=>{ this.startNew(); }, 900);
+    } else {
+      // wrong
+      el.classList.add('wrong');
+      const correctEl = this.noteEls[this.current.answerMidi]; if(correctEl) correctEl.classList.add('correct');
+      this.attempts++; this.updateScore();
+      // show acknowledge button
+      this.awaitingAcknowledgement = true;
+      document.getElementById('next-manual').style.display='inline-block';
+    }
+  }
+  
+  updateScore(){
+    document.getElementById('score').textContent = `Bonnes réponses : ${this.correct} / Essais : ${this.attempts}`;
+  }
+  
+  acknowledge(){
+    this.awaitingAcknowledgement=false;
+    document.getElementById('next-manual').style.display='none';
+    this.clearHighlights();
+    this.startNew();
+  }
+  
+  playStart(){ if(this.current){ this.playMidi(this.current.start,1.1); } }
+}
+
+/* ---------- App wiring ---------- */
+const btn = document.getElementById('new-partition');
+const svg = btn.querySelector('svg');
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const chordGen = new ChordGenerator(document.getElementById('chord-list'));
+  // initial partition
+  const defaultCat = Object.keys(CATEGORIES)[0];
+  document.getElementById('chord-category').value = defaultCat;
+  chordGen.generate(defaultCat, parseInt(document.getElementById('chord-length').value,10));
+
+  document.getElementById('new-partition').addEventListener('click', ()=>{
+    const cat = document.getElementById('chord-category').value;
+    const len = parseInt(document.getElementById('chord-length').value||4,10);
+    chordGen.generate(cat, len);
+
+      // Animation du SVG
+    // Si une rotation est en cours, on l'annule proprement :
+    svg.classList.remove('rotate');
+
+    // On attend le prochain "frame" du navigateur avant de réappliquer
+    requestAnimationFrame(() => {
+      svg.classList.add('rotate');
+    });
+  });
+
+  // menu
+  const secChords = document.getElementById('chords');
+  const secIntervals = document.getElementById('intervals');
+  document.getElementById('menu-chords').addEventListener('click', ()=>{ secChords.style.display='block'; secIntervals.style.display='none'; document.getElementById('menu-chords').classList.add('active'); document.getElementById('menu-intervals').classList.remove('active'); });
+  document.getElementById('menu-intervals').addEventListener('click', ()=>{ secChords.style.display='none'; secIntervals.style.display='block'; document.getElementById('menu-intervals').classList.add('active'); document.getElementById('menu-chords').classList.remove('active'); });
+
+  // interval trainer
+  const trainer = new IntervalTrainer(document.getElementById('keyboard'));
+  trainer.startNew();
+
+  document.getElementById('next-manual').addEventListener('click', ()=>{ trainer.acknowledge(); });
+
+  // accessibility: allow spacebar to replay
+  window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); trainer.playStart(); } });
+});
+
+  </script>
+</body>
+</html>
