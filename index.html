@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Chord & Interval Trainer</title>
   <style>
  :root{
@@ -127,6 +128,7 @@ option{
 input#chord-length{
   border-radius: 8px;
   color: var(--accent);
+  background-color: #3f3f3f5c;
   font-weight: bold;
 }
 
@@ -329,7 +331,7 @@ footer{
             <select id="chord-category">
               <!-- categories injected by JS -->
             </select>
-            <input id="chord-length" type="number" min="1" max="12" value="4" style="width:72px" title="Nombre d'accords" />
+            <input id="chord-length" type="number" min="1" max="12" value="10" style="width:30px" title="Nombre d'accords" />
             <button class="btn primary" id="new-partition">
               <!-- <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 95 80" fill="none">
                 <path d="M20.8371 38.3514C19.1738 38.3624 17.8191 37.0182 17.8172 35.3549L17.7935 14.7558C17.7904 12.087 21.0121 10.743 22.9065 12.6228L43.5289 33.0853C45.4233 34.965 44.1045 38.1971 41.4358 38.2148L20.8371 38.3514Z" fill="#7DD3FC"/>
