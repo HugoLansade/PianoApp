@@ -269,11 +269,65 @@ button#next-manual{
     text-shadow: #dd9b20cc 1px 0 10px;
 }
 
+.interval-options label { display:inline-block; margin-right:10px; }
+
+/* --- Dropdown menu style --- */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#dropdown-toggle {
+  background-color: #2b2b2b00;
+  color: var(--muted);
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#dropdown-toggle:hover {
+  /* background-color: #071427; */
+  background: linear-gradient(90deg, rgba(125, 211, 252, 0.08), rgba(125, 211, 252, 0.02));
+  border-color: rgba(125, 211, 252, 0.18);
+  color: var(--accent)
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #071427;
+  min-width: 220px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  padding: 8px;
+  z-index: 100;
+}
+
+.dropdown-content label {
+  display: block;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.dropdown.show .dropdown-content {
+  display: block;
+}
+
 .controls-row{
   display:flex;
   gap:8px;
   align-items:center
 }
+
+.interval-box,
+#select-all {
+  accent-color: #dd9b20;
+}
+
 
 footer{
   margin-top:18px;
@@ -382,22 +436,26 @@ footer{
             <div class="score" id="score">Bonnes réponses : 0 / Essais : 0</div>
           </div>
           <div class="controls-row">
-            <select id="interval-select">
-              <option value="mix">Mix (tous)</option>
-              <option value="0">Unisson</option>
-              <option value="1">Half step</option>
-              <option value="2">Whole step</option>
-              <option value="3">Min 3rd</option>
-              <option value="4">Maj 3rd</option>
-              <option value="5">4th</option>
-              <option value="6">Tritone</option>
-              <option value="7">5th</option>
-              <option value="8">Min 6th</option>
-              <option value="9">Maj 6th</option>
-              <option value="10">Min 7th</option>
-              <option value="11">Maj 7th</option>
-              <option value="12">Octave</option>
-            </select>            
+            <div class="dropdown">
+              <button id="dropdown-toggle">🎵 Choisir les intervalles ▾</button>
+              <div id="interval-menu" class="dropdown-content">
+                <label><input type="checkbox" id="select-all" checked> Tout sélectionner</label>
+                <label><input type="checkbox" class="interval-box" value="0" checked> Unisson</label>
+                <label><input type="checkbox" class="interval-box" value="1" checked> Half step</label>
+                <label><input type="checkbox" class="interval-box" value="2" checked> Whole step</label>
+                <label><input type="checkbox" class="interval-box" value="3" checked> Min 3rd</label>
+                <label><input type="checkbox" class="interval-box" value="4" checked> Maj 3rd</label>
+                <label><input type="checkbox" class="interval-box" value="5" checked> 4th</label>
+                <label><input type="checkbox" class="interval-box" value="6" checked> Tritone</label>
+                <label><input type="checkbox" class="interval-box" value="7" checked> 5th</label>
+                <label><input type="checkbox" class="interval-box" value="8" checked> Min 6th</label>
+                <label><input type="checkbox" class="interval-box" value="9" checked> Maj 6th</label>
+                <label><input type="checkbox" class="interval-box" value="10" checked> Min 7th</label>
+                <label><input type="checkbox" class="interval-box" value="11" checked> Maj 7th</label>
+                <label><input type="checkbox" class="interval-box" value="12" checked> Octave</label>
+              </div>
+            </div>
+                        
             <div style="display:flex;gap:8px;align-items:center">
               <button class="btn" id="next-manual" style="display:none">Suivant</button>
             </div>
@@ -750,24 +808,55 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // interval trainer
   const trainer = new IntervalTrainer(document.getElementById('keyboard'));
+// --- Dropdown toggle ---
+const dropdown = document.querySelector('.dropdown');
+const toggleBtn = document.getElementById('dropdown-toggle');
+toggleBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  dropdown.classList.toggle('show');
+});
+
+// Ferme le menu quand on clique à l’extérieur
+window.addEventListener('click', (e) => {
+  if (!dropdown.contains(e.target)) {
+    dropdown.classList.remove('show');
+  }
+});
+
+// --- Checkbox interval logic ---
+const checkboxes = document.querySelectorAll('.interval-box');
+const selectAllBox = document.getElementById('select-all');
+
+function updateAllowedIntervals() {
+  const selected = Array.from(checkboxes)
+    .filter(cb => cb.checked)
+    .map(cb => parseInt(cb.value, 10));
+  trainer.allowedIntervals = selected.length ? selected : [];
+  trainer.startNew();
+}
+
+selectAllBox.addEventListener('change', () => {
+  checkboxes.forEach(cb => cb.checked = selectAllBox.checked);
+  updateAllowedIntervals();
+});
+
+checkboxes.forEach(cb => {
+  cb.addEventListener('change', () => {
+    if (!cb.checked) selectAllBox.checked = false;
+    if (Array.from(checkboxes).every(c => c.checked)) selectAllBox.checked = true;
+    updateAllowedIntervals();
+  });
+});
+
+updateAllowedIntervals();
+
+
   trainer.startNew();
 
   document.getElementById('next-manual').addEventListener('click', ()=>{ trainer.acknowledge(); });
 
   // accessibility: allow spacebar to replay
   window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); trainer.playStart(); } });
-
-  const intervalSelect = document.getElementById('interval-select');
-  intervalSelect.addEventListener('change', ()=>{
-    const val = intervalSelect.value;
-    if(val === 'mix'){
-      trainer.allowedIntervals = [...Array(13).keys()];
-    } else {
-      trainer.allowedIntervals = [parseInt(val,10)];
-    }
-    // on peut relancer un nouvel intervalle si besoin
-    trainer.startNew();
-  });
 
 });
 
