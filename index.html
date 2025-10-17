@@ -382,6 +382,22 @@ footer{
             <div class="score" id="score">Bonnes réponses : 0 / Essais : 0</div>
           </div>
           <div class="controls-row">
+            <select id="interval-select">
+              <option value="mix">Mix (tous)</option>
+              <option value="0">Unisson</option>
+              <option value="1">Half step</option>
+              <option value="2">Whole step</option>
+              <option value="3">Min 3rd</option>
+              <option value="4">Maj 3rd</option>
+              <option value="5">4th</option>
+              <option value="6">Tritone</option>
+              <option value="7">5th</option>
+              <option value="8">Min 6th</option>
+              <option value="9">Maj 6th</option>
+              <option value="10">Min 7th</option>
+              <option value="11">Maj 7th</option>
+              <option value="12">Octave</option>
+            </select>            
             <div style="display:flex;gap:8px;align-items:center">
               <button class="btn" id="next-manual" style="display:none">Suivant</button>
             </div>
@@ -509,6 +525,7 @@ class IntervalTrainer{
     this.correct=0; this.attempts=0;
     this.current = null;
     this.awaitingAcknowledgement = false;
+    this.allowedIntervals = [...Array(13).keys()]; // par défaut : tous les intervalles
   }
   
   buildKeyboard(){
@@ -594,6 +611,7 @@ class IntervalTrainer{
     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
   
+  
   playMidi(midi,duration=1.2){
     if(!this.audioCtx) return;
     const now = this.audioCtx.currentTime;
@@ -608,11 +626,13 @@ class IntervalTrainer{
     osc.connect(gain); gain.connect(this.audioCtx.destination);
     osc.start(now); osc.stop(now+duration+0.05);
   }
-  
+
+
   randomInterval(){
-    const intervals = [0,1,2,3,4,5,6,7,8,9,10,11,12];
-    return intervals[Math.floor(Math.random()*intervals.length)];
-  }
+  const allowed = this.allowedIntervals;
+  return allowed[Math.floor(Math.random() * allowed.length)];
+}
+
   
   intervalName(i){
     const names = {0:'unisson',1:'half step',2:'whole step',3:'min 3rd',4:'maj 3rd',5:'4th',6:'tritone',7:'5th',8:'min 6th',9:'maj 6th',10:'min 7th',11:'maj 7th',12:'octave'};
@@ -736,6 +756,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // accessibility: allow spacebar to replay
   window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); trainer.playStart(); } });
+
+  const intervalSelect = document.getElementById('interval-select');
+  intervalSelect.addEventListener('change', ()=>{
+    const val = intervalSelect.value;
+    if(val === 'mix'){
+      trainer.allowedIntervals = [...Array(13).keys()];
+    } else {
+      trainer.allowedIntervals = [parseInt(val,10)];
+    }
+    // on peut relancer un nouvel intervalle si besoin
+    trainer.startNew();
+  });
+
 });
 
   </script>
