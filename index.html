@@ -33,9 +33,7 @@ html,body{
 .app{
   max-width:1100px;
   margin:28px auto;
-  padding:10px;
-  min-height: 100vh; /* plutôt que height:100% */
-  padding-bottom: env(safe-area-inset-bottom);
+  padding:20px;
 }
 
 header{
@@ -171,6 +169,7 @@ input#chord-length{
   display:flex
 }
 
+
 .octave{
   display:flex;
   position:relative;
@@ -264,7 +263,7 @@ button#next-manual{
   box-shadow:0 6px 20px rgba(34, 197, 94, 0.6) !important
 }
 
-#chord-instruction {
+.chord-instruction {
     font-weight: bold;
     font-size: 16px;
     color: #dd9b20;
@@ -279,7 +278,7 @@ button#next-manual{
   display: inline-block;
 }
 
-#dropdown-toggle {
+.dropdown-toggle {
   background-color: #2b2b2b00;
   color: var(--muted);
   border: none;
@@ -289,7 +288,7 @@ button#next-manual{
   cursor: pointer;
 }
 
-#dropdown-toggle:hover {
+.dropdown-toggle:hover {
   /* background-color: #071427; */
   background: linear-gradient(90deg, rgba(125, 211, 252, 0.08), rgba(125, 211, 252, 0.02));
   border-color: rgba(125, 211, 252, 0.18);
@@ -330,13 +329,21 @@ button#next-manual{
   accent-color: #dd9b20;
 }
 
+.interval-box2{
+  accent-color: #dd9b20;
+}
 
-/* footer{
+.chord-type-box,
+#select-all-chords {
+  accent-color: #dd9b20;
+}
+
+footer{
   margin-top:18px;
   color:var(--muted);
   font-size:13px;
   text-align:center
-} */
+}
 
 @keyframes rotate {
   from {
@@ -372,6 +379,7 @@ button#next-manual{
       <div class="menu">
         <button id="menu-chords" class="active">🎵 Générateur d'accords</button>
         <button id="menu-intervals">🎹 Entraînement intervalles</button>
+        <button id="menu-chord-trainer">🎹 Entraînement accords</button>
       </div>
     </header>
 
@@ -381,7 +389,6 @@ button#next-manual{
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap: wrap">
           <div>
             <strong>Générateur de partitions d'accords</strong>
-            <!-- <div style="color:var(--muted);font-size:13px">Choisissez une catégorie puis cliquez sur "Nouvelle partition"</div> -->
           </div>
           <div style="display:flex;gap:8px;flex-wrap: wrap;align-items:center">
             <select id="chord-category">
@@ -389,12 +396,6 @@ button#next-manual{
             </select>
             <input id="chord-length" type="number" min="1" max="12" value="10" style="width:30px" title="Nombre d'accords" />
             <button class="btn primary" id="new-partition">
-              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 95 80" fill="none">
-                <path d="M20.8371 38.3514C19.1738 38.3624 17.8191 37.0182 17.8172 35.3549L17.7935 14.7558C17.7904 12.087 21.0121 10.743 22.9065 12.6228L43.5289 33.0853C45.4233 34.965 44.1045 38.1971 41.4358 38.2148L20.8371 38.3514Z" fill="#7DD3FC"/>
-                <path d="M73.6839 41.4349C75.3471 41.4274 76.699 42.7745 76.6974 44.4378L76.6773 65.037C76.6747 67.7057 73.4502 69.0428 71.5597 67.1591L50.9809 46.6528C49.0905 44.769 50.4162 41.5398 53.0849 41.5277L73.6839 41.4349Z" fill="#7DD3FC"/>
-                <path d="M73 38.2363C73 32.6486 71.1646 27.2155 67.776 22.7724C64.3874 18.3293 59.6333 15.1223 54.2445 13.6444C48.8557 12.1665 43.1306 12.4995 37.9496 14.5923C32.7685 16.6851 28.4182 20.4217 25.5677 25.2277L34.6642 30.6231C36.3325 27.8104 38.8785 25.6236 41.9107 24.3988C44.9429 23.174 48.2934 22.9791 51.4472 23.8441C54.6009 24.709 57.3833 26.5859 59.3664 29.1862C61.3496 31.7864 62.4237 34.9661 62.4237 38.2363H73Z" fill="#7DD3FC"/>
-                <path d="M22.0078 41.7378C22.0078 47.3256 23.8432 52.7587 27.2318 57.2017C30.6204 61.6448 35.3745 64.8518 40.7633 66.3297C46.1521 67.8076 51.8772 67.4746 57.0583 65.3818C62.2393 63.289 66.5896 59.5524 69.4401 54.7464L60.3436 49.351C58.6753 52.1637 56.1293 54.3505 53.0972 55.5753C50.065 56.8001 46.7144 56.995 43.5606 56.1301C40.4069 55.2651 37.6245 53.3882 35.6414 50.788C33.6582 48.1877 32.5841 45.008 32.5841 41.7378L22.0078 41.7378Z" fill="#7DD3FC"/>
-              </svg> -->
               <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 95 80" fill="none">
                 <g filter="url(#filter0_d_2977_58)">
                 <mask id="path-1-inside-1_2977_58" fill="white">
@@ -423,7 +424,7 @@ button#next-manual{
                 </filter>
                 </defs>
               </svg>
-            </button><!--Nouvelle partition -->             
+            </button>          
           </div>
         </div>
 
@@ -434,12 +435,12 @@ button#next-manual{
       <section id="intervals" class="card" style="display:none">
         <div class="trainer-top">
           <div>
-            <div class="instruction" id="instruction">Trouve l'intervalle : <span id="chord-instruction">Note</span></div>
+            <div class="instruction" id="instruction">Trouve l'intervalle : <span class="chord-instruction" id="chord-instruction">Note</span></div>
             <div class="score" id="score">Bonnes réponses : 0 / Essais : 0</div>
           </div>
           <div class="controls-row">
             <div class="dropdown">
-              <button id="dropdown-toggle">🎵 Choisir les intervalles ▾</button>
+              <button class="dropdown-toggle" id="dropdown-toggle">🎵 Choisir les intervalles ▾</button>
               <div id="interval-menu" class="dropdown-content">
                 <label><input type="checkbox" id="select-all" checked> Tout sélectionner</label>
                 <label><input type="checkbox" class="interval-box" value="0" checked> Unisson</label>
@@ -455,24 +456,58 @@ button#next-manual{
                 <label><input type="checkbox" class="interval-box" value="10" checked> Min 7th</label>
                 <label><input type="checkbox" class="interval-box" value="11" checked> Maj 7th</label>
                 <label><input type="checkbox" class="interval-box" value="12" checked> Octave</label>
-              </div>
             </div>
+          </div>
                         
             <div style="display:flex;gap:8px;align-items:center">
               <button class="btn" id="next-manual" style="display:none">Suivant</button>
             </div>
-            <!-- <button class="btn" id="reset-score">🔁</button> -->
           </div>
         </div>
-
-        <div class="keyboard" id="keyboard" aria-hidden="false"></div>
+        
+        <div class="keyboard" id="keyboard"></div>
       </section>
 
+      <!-- Chord trainer (nouvelle section) -->
+      <section id="chord-trainer" class="card" style="display:none">
+        <div class="trainer-top">
+          <div>
+            <div class="instruction" id="instruction2">Trouve l'intervalle : <span class="chord-instruction" id="chord-instruction2">Note</span></div>
+          </div>
+          <div class="controls-row">
+            <div class="dropdown">
+              <button class="dropdown-toggle" id="dropdown-toggle2">🎵 Choisir les accords ▾</button>
+              <div id="chord-type-menu" class="dropdown-content">
+                <label><input type="checkbox" id="select-all-chords" checked> Tout sélectionner</label>
+                <label><input type="checkbox" class="chord-type-box" value="maj" checked> Majeur (maj)</label>
+                <label><input type="checkbox" class="chord-type-box" value="min" checked> Mineur (min)</label>
+                <label><input type="checkbox" class="chord-type-box" value="dim" checked> Diminué (dim)</label>
+                <label><input type="checkbox" class="chord-type-box" value="aug" checked> Augmenté (aug)</label>
+                <label><input type="checkbox" class="chord-type-box" value="sus2" checked> Sus2</label>
+                <label><input type="checkbox" class="chord-type-box" value="sus4" checked> Sus4</label>
+                <label><input type="checkbox" class="chord-type-box" value="7" checked> Dominant 7e (7)</label>
+                <label><input type="checkbox" class="chord-type-box" value="maj7" checked> 7e majeure (maj7)</label>
+                <label><input type="checkbox" class="chord-type-box" value="m7" checked> 7e mineure (m7)</label>
+                <label><input type="checkbox" class="chord-type-box" value="m7b5" checked> Mi 7e b5 (m7b5)</label>
+                <label><input type="checkbox" class="chord-type-box" value="dim7" checked> Diminué 7e (dim7)</label>
+                <label><input type="checkbox" class="chord-type-box" value="7sus4" checked> 7 sus4</label>
+                <label><input type="checkbox" class="chord-type-box" value="7b9" checked> 7 b9</label>
+                <label><input type="checkbox" class="chord-type-box" value="maj7#11" checked> Maj7 #11</label>
+              </div>
+          </div>
+                        
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="btn" id="chord-next">Suivant</button>
+            </div>
+          </div>
+        </div>
+        <div class="keyboard" id="chord-trainer-container"></div>
+      </section>
     </main>
   </div>
 
   <script>
- /* ---------- Music helpers ---------- */
+/* ---------- Music helpers ---------- */
 const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 const NOTES_FLAT  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 
@@ -484,7 +519,6 @@ function midiToNote(m){
 }
 
 function noteToMidi(name){
-  // Accept forms like C#4 or Db3
   const m = name.match(/^([A-Ga-g])([#b]?)(\d+)$/);
   if(!m) return null;
   const pitch = m[1].toUpperCase(); const acc = m[2]||''; const oct = parseInt(m[3],10);
@@ -508,7 +542,6 @@ const CHORD_TYPES = {
   'dominant 7e':{abbr:'7', intervals:[0,4,7,10]}
 };
 
-// Category presets
 const CATEGORIES = {
   'Triades majeures': ['Triade majeure'],
   'Triades mineures': ['Triade mineure'],
@@ -522,7 +555,6 @@ const CATEGORIES = {
 };
 
 const ROOTS = (()=>{
-  // Create list of possible roots from C to B including accidentals (use sharps for convenience)
   const roots = [];
   for(let i=0;i<12;i++) roots.push(NOTES_SHARP[i]);
   return roots;
@@ -553,12 +585,66 @@ class ChordGenerator{
     }
     this.render(chords);
   }
+
+//   generate(category, length) {
+//   const types = CATEGORIES[category] || [category];
+//   const chords = [];
+
+//   // On crée une copie mélangée de ROOTS
+//   const availableRoots = [...ROOTS];
+//   for (let i = availableRoots.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [availableRoots[i], availableRoots[j]] = [availableRoots[j], availableRoots[i]];
+//   }
+
+//   for (let i = 0; i < length; i++) {
+//     // On choisit un root aléatoire dans la liste mélangée
+//     const root = availableRoots[i % availableRoots.length];
+//     const typeName = types[Math.floor(Math.random() * types.length)];
+//     const type = CHORD_TYPES[typeName];
+
+//     const displayRoot = this.formatRoot(root);
+//     chords.push({
+//       root,
+//       displayRoot,
+//       typeName,
+//       abbr: type ? type.abbr : '',
+//       intervals: type ? type.intervals : []
+//     });
+//   }
+
+//   // On mélange aussi la liste finale
+//   chords.sort(() => Math.random() - 0.5);
+
+//   this.render(chords);
+// }
+
+
+//   generate(category, length){
+//   const types = CATEGORIES[category] || [category];
+
+//   // On copie et mélange les notes de base
+//   const shuffledRoots = [...ROOTS]
+//     .sort(() => Math.random() - 0.5); // mélange aléatoire
+
+//   const chords = [];
+//   for(let i=0;i<length;i++){
+//     const root = shuffledRoots[i % shuffledRoots.length]; // évite de dépasser si length > 12
+//     const typeName = types[Math.floor(Math.random()*types.length)];
+//     const type = CHORD_TYPES[typeName];
+//     const displayRoot = this.formatRoot(root);
+//     chords.push({root, displayRoot, typeName, abbr:type ? type.abbr : '', intervals:type?type.intervals:[]});
+//   }
+
+//   // Mélange aussi la liste finale pour un ordre vraiment aléatoire
+//   const randomized = chords.sort(() => Math.random() - 0.5);
+//   this.render(randomized);
+// }
+
   formatRoot(root){
-    // Show both enharmonic if applicable (C# / Db)
     const idx = NOTES_SHARP.indexOf(root);
     if(idx===-1) return root;
     const flat = NOTES_FLAT[idx];
-    // Modify code to avoid having twice the same chord, favorise to bemol flat
     if(root.includes('#')) return `${flat}`;
     return root;
   }
@@ -576,32 +662,29 @@ class ChordGenerator{
 class IntervalTrainer{
   constructor(keyboardEl){
     this.el = keyboardEl;
-    this.minMidi = noteToMidi('C3'); // C3
-    this.maxMidi = noteToMidi('C5'); // C5
+    this.minMidi = noteToMidi('C3');
+    this.maxMidi = noteToMidi('C5');
     this.octaves = [];
     this.onAnswer = null;
     this.buildKeyboard();
-    this.setupAudio();
     this.correct=0; this.attempts=0;
     this.current = null;
     this.awaitingAcknowledgement = false;
-    this.allowedIntervals = [...Array(13).keys()]; // par défaut : tous les intervalles
+    this.allowedIntervals = [...Array(13).keys()];
   }
   
   buildKeyboard(){
     this.noteEls = {};
-    
-    // Structure: 2 octaves + 1 note (C3 to C5)
+
     const octaves = [
-      {start: 48, label: '3'}, // C3 to B3
-      {start: 60, label: '4'}  // C4 to B4
+      {start: 48, label: '3'},
+      {start: 60, label: '4'}
     ];
     
     octaves.forEach(octave => {
       const octaveDiv = document.createElement('div');
       octaveDiv.className = 'octave';
       
-      // White keys structure for one octave
       const whiteKeys = [
         {midi: octave.start, name: 'C', hasBlack: true, blackPos: 'black-1'},
         {midi: octave.start + 2, name: 'D', hasBlack: true, blackPos: 'black-2'},
@@ -625,7 +708,6 @@ class IntervalTrainer{
         whiteDiv.appendChild(white);
         this.noteEls[wKey.midi] = white;
         
-        // Add black key if needed
         if (wKey.hasBlack) {
           const blackMidi = wKey.midi + 1;
           const black = document.createElement('div');
@@ -643,7 +725,6 @@ class IntervalTrainer{
       this.el.appendChild(octaveDiv);
     });
     
-    // Add final C5
     const lastOctaveDiv = this.el.querySelectorAll('.octave')[this.el.querySelectorAll('.octave').length - 1];
     const c5Div = document.createElement('div');
     c5Div.style.position = 'relative';
@@ -658,7 +739,6 @@ class IntervalTrainer{
     this.noteEls[72] = c5;
     lastOctaveDiv.appendChild(c5Div);
     
-    // Attach click events
     this.el.querySelectorAll('.key').forEach(k => {
       k.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -666,33 +746,11 @@ class IntervalTrainer{
       });
     });
   }
-  
-  setupAudio(){
-    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  
-  
-  playMidi(midi,duration=1.2){
-    if(!this.audioCtx) return;
-    const now = this.audioCtx.currentTime;
-    const osc = this.audioCtx.createOscillator();
-    const gain = this.audioCtx.createGain();
-    osc.type='sine';
-    const freq = 440 * Math.pow(2,(midi-69)/12);
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.18, now+0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now+duration);
-    osc.connect(gain); gain.connect(this.audioCtx.destination);
-    osc.start(now); osc.stop(now+duration+0.05);
-  }
-
 
   randomInterval(){
-  const allowed = this.allowedIntervals;
-  return allowed[Math.floor(Math.random() * allowed.length)];
-}
-
+    const allowed = this.allowedIntervals;
+    return allowed[Math.floor(Math.random() * allowed.length)];
+  }
   
   intervalName(i){
     const names = {0:'unisson',1:'half step',2:'whole step',3:'min 3rd',4:'maj 3rd',5:'4th',6:'tritone',7:'5th',8:'min 6th',9:'maj 6th',10:'min 7th',11:'maj 7th',12:'octave'};
@@ -701,62 +759,47 @@ class IntervalTrainer{
   
   startNew(difficulty='normal'){
     if(this.awaitingAcknowledgement) return;
-    // choose random start note such that target within range
     const interval = this.randomInterval();
-    // choose start so that start+interval between min and max
     const minStart = this.minMidi;
     const maxStart = this.maxMidi - interval;
     const start = Math.floor(Math.random()*(maxStart-minStart+1)) + minStart;
     this.current = {start, interval, answerMidi:start+interval};
     this.updateInstruction();
-    // highlight start key
     this.clearHighlights();
     const startEl = this.noteEls[this.current.start]; if(startEl) this.markPlaying(startEl);
   }
   
   updateInstruction(){
     const instr = document.getElementById('chord-instruction');
-
-    // const startNote = this.noteEls[startMidi].dataset.note;
     const startMidi = this.current.start;
-    // const targetMidi = this.current.answerMidi;
-
-    // On récupère la note via midiToNote
     const startNote = midiToNote(startMidi).nameSharp;
-    // const targetNote = midiToNote(targetMidi).nameSharp;
-
     instr.textContent = `${startNote} ${this.intervalName(this.current.interval)}`;
   }
   
   markPlaying(el){
     this.clearHighlights(); el.classList.add('playing');
-    // play start tone
-    this.playMidi(parseInt(el.dataset.midi), 0.9);
   }
   
   clearHighlights(){
     Object.values(this.noteEls).forEach(k=>{k.classList.remove('playing','correct','wrong')});
   }
   
-  onKeyClick(midi){
-    if(!this.current) return;
+  onKeyClick(midi) {
+    if (!this.current) return;
     const el = this.noteEls[midi];
-    // play tone
-    this.playMidi(midi,0.9);
-    if(this.awaitingAcknowledgement) return; // wait for click on J'ai compris
+    
+    if(this.awaitingAcknowledgement) return;
+    
     if(midi === this.current.answerMidi){
-      // correct
       el.classList.add('correct');
       this.correct++; this.attempts++;
       this.updateScore();
-      // auto next after short delay
       setTimeout(()=>{ this.startNew(); }, 900);
     } else {
-      // wrong
       el.classList.add('wrong');
-      const correctEl = this.noteEls[this.current.answerMidi]; if(correctEl) correctEl.classList.add('correct');
+      const correctEl = this.noteEls[this.current.answerMidi]; 
+      if(correctEl) correctEl.classList.add('correct');
       this.attempts++; this.updateScore();
-      // show acknowledge button
       this.awaitingAcknowledgement = true;
       document.getElementById('next-manual').style.display='inline-block';
     }
@@ -772,17 +815,174 @@ class IntervalTrainer{
     this.clearHighlights();
     this.startNew();
   }
-  
-  playStart(){ if(this.current){ this.playMidi(this.current.start,1.1); } }
+}
+
+/* ---------- Chord Trainer Section ---------- */
+class ChordTrainerSection {
+    constructor(containerId, nextBtnId) {
+        this.container = document.getElementById(containerId);
+        this.nextBtn = document.getElementById(nextBtnId);
+        this.noteEls = {};
+        this.currentChord = null;
+        this.selectedNotes = [];
+        this.onNext = null;
+
+        this.buildKeyboard();
+        this.nextBtn.addEventListener('click', () => this.nextChord());
+    }
+
+    buildKeyboard() {
+        this.noteEls = {};
+
+        const octaves = [
+            { start: 48, label: '3' },
+            { start: 60, label: '4' }
+        ];
+
+        octaves.forEach(octave => {
+            const octaveDiv = document.createElement('div');
+            octaveDiv.className = 'octave';
+
+            const whiteKeys = [
+                { midi: octave.start, name: 'C', hasBlack: true, blackPos: 'black-1' },
+                { midi: octave.start + 2, name: 'D', hasBlack: true, blackPos: 'black-2' },
+                { midi: octave.start + 4, name: 'E', hasBlack: false },
+                { midi: octave.start + 5, name: 'F', hasBlack: true, blackPos: 'black-4' },
+                { midi: octave.start + 7, name: 'G', hasBlack: true, blackPos: 'black-5' },
+                { midi: octave.start + 9, name: 'A', hasBlack: true, blackPos: 'black-6' },
+                { midi: octave.start + 11, name: 'B', hasBlack: false }
+            ];
+
+            whiteKeys.forEach(wKey => {
+                const whiteDiv = document.createElement('div');
+                whiteDiv.style.position = 'relative';
+                whiteDiv.style.flex = '1';
+                whiteDiv.style.height = '100%';
+
+                const white = document.createElement('div');
+                white.className = 'key white';
+                white.dataset.midi = wKey.midi;
+                white.dataset.note = `${wKey.name}${octave.label}`;
+                whiteDiv.appendChild(white);
+                this.noteEls[wKey.midi] = white;
+
+                if (wKey.hasBlack) {
+                    const blackMidi = wKey.midi + 1;
+                    const black = document.createElement('div');
+                    black.className = `key black ${wKey.blackPos}`;
+                    black.dataset.midi = blackMidi;
+                    black.dataset.note = `${this.midiToNoteName(blackMidi)}${octave.label}`;
+                    whiteDiv.appendChild(black);
+                    this.noteEls[blackMidi] = black;
+                }
+
+                octaveDiv.appendChild(whiteDiv);
+            });
+
+            this.container.appendChild(octaveDiv);
+        });
+
+        const c5Div = document.createElement('div');
+        c5Div.style.position = 'relative';
+        c5Div.style.flex = '1';
+        c5Div.style.height = '100%';
+
+        const c5 = document.createElement('div');
+        c5.className = 'key white';
+        c5.dataset.midi = 72;
+        c5.dataset.note = 'C5';
+        c5Div.appendChild(c5);
+        this.noteEls[72] = c5;
+        this.container.lastElementChild.appendChild(c5Div);
+
+        this.container.querySelectorAll('.key').forEach(k => {
+            k.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.onKeyClick(parseInt(k.dataset.midi));
+            });
+        });
+    }
+
+    midiToNoteName(midi) {
+        const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+        return NOTES_SHARP[midi % 12];
+    }
+
+    startChord(chord) {
+        this.currentChord = chord;
+        this.selectedNotes = [];
+        this.nextBtn.style.display = 'none';
+        this.clearHighlights();
+
+        const instr = document.getElementById('chord-instruction2');
+        instr.textContent = `${chord.root} ${chord.typeName}`;
+    }
+
+    onKeyClick(midi) {
+        if (!this.currentChord) return;
+
+        const el = this.noteEls[midi];
+        const noteClicked = el.dataset.note.replace(/\d+/, '');
+
+        if (this.selectedNotes.includes(noteClicked)) return;
+
+        const equivalents = this.normalizeNote(noteClicked);
+        const isCorrect = equivalents.some(n => this.currentChord.correctNotes.includes(n));
+
+        if (isCorrect) {
+            el.classList.add('correct');
+            this.selectedNotes.push(noteClicked);
+
+            const allSelected = this.currentChord.correctNotes.every(n =>
+                this.selectedNotes.includes(n) || this.normalizeNote(n).some(e => this.selectedNotes.includes(e))
+            );
+
+            if (allSelected) setTimeout(() => this.nextChord(), 500);
+
+        } else {
+            el.classList.add('wrong');
+            this.showCorrectNotes();
+            this.nextBtn.style.display = 'inline-block';
+        }
+    }
+
+    normalizeNote(note) {
+        const map = {
+            'C#': 'Db', 'Db': 'C#',
+            'D#': 'Eb', 'Eb': 'D#',
+            'F#': 'Gb', 'Gb': 'F#',
+            'G#': 'Ab', 'Ab': 'G#',
+            'A#': 'Bb', 'Bb': 'A#'
+        };
+        return map[note] ? [note, map[note]] : [note];
+    }
+
+    showCorrectNotes() {
+        Object.values(this.noteEls).forEach(k => {
+            const baseNote = k.dataset.note.replace(/\d+/, '');
+            if (this.currentChord.correctNotes.some(n => this.normalizeNote(n).includes(baseNote))) {
+                k.classList.add('correct');
+            }
+        });
+    }
+
+    clearHighlights() {
+        Object.values(this.noteEls).forEach(k => k.classList.remove('correct', 'wrong'));
+    }
+
+    nextChord() {
+        this.selectedNotes = [];
+        this.nextBtn.style.display = 'none';
+        this.clearHighlights();
+        if (typeof this.onNext === 'function') this.onNext();
+    }
 }
 
 /* ---------- App wiring ---------- */
-const btn = document.getElementById('new-partition');
-const svg = btn.querySelector('svg');
-
 document.addEventListener('DOMContentLoaded', ()=>{
+
+  /* ---------- Chord Generator ---------- */
   const chordGen = new ChordGenerator(document.getElementById('chord-list'));
-  // initial partition
   const defaultCat = Object.keys(CATEGORIES)[0];
   document.getElementById('chord-category').value = defaultCat;
   chordGen.generate(defaultCat, parseInt(document.getElementById('chord-length').value,10));
@@ -791,76 +991,212 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const cat = document.getElementById('chord-category').value;
     const len = parseInt(document.getElementById('chord-length').value||4,10);
     chordGen.generate(cat, len);
+  });
 
-      // Animation du SVG
-    // Si une rotation est en cours, on l'annule proprement :
-    svg.classList.remove('rotate');
+  /* ---------- Interval Trainer ---------- */
+  const intervalTrainer = new IntervalTrainer(document.getElementById('keyboard'));
 
-    // On attend le prochain "frame" du navigateur avant de réappliquer
-    requestAnimationFrame(() => {
-      svg.classList.add('rotate');
+  function setupDropdown(toggleId, menuId) {
+    const toggleBtn = document.getElementById(toggleId);
+    const menuElement = document.getElementById(menuId);
+    
+    if (!toggleBtn || !menuElement) {
+      console.warn(`Dropdown elements not found: ${toggleId} or ${menuId}`);
+      return;
+    }
+    
+    const menu = menuElement.parentElement;
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+      menu.classList.toggle('show');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!menu.contains(e.target)) menu.classList.remove('show');
+    });
+  }
+
+  setupDropdown('dropdown-toggle', 'interval-menu');
+
+  const checkboxes = document.querySelectorAll('.interval-box');
+  const selectAllBox = document.getElementById('select-all');
+
+  function updateAllowedIntervals() {
+    const selected = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => parseInt(cb.value, 10));
+    intervalTrainer.allowedIntervals = selected.length ? selected : [];
+    intervalTrainer.startNew();
+  }
+
+  selectAllBox.addEventListener('change', () => {
+    checkboxes.forEach(cb => cb.checked = selectAllBox.checked);
+    updateAllowedIntervals();
+  });
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      if (!cb.checked) selectAllBox.checked = false;
+      if (Array.from(checkboxes).every(c => c.checked)) selectAllBox.checked = true;
+      updateAllowedIntervals();
     });
   });
 
-  // menu
-  const secChords = document.getElementById('chords');
-  const secIntervals = document.getElementById('intervals');
-  document.getElementById('menu-chords').addEventListener('click', ()=>{ secChords.style.display='block'; secIntervals.style.display='none'; document.getElementById('menu-chords').classList.add('active'); document.getElementById('menu-intervals').classList.remove('active'); });
-  document.getElementById('menu-intervals').addEventListener('click', ()=>{ secChords.style.display='none'; secIntervals.style.display='block'; document.getElementById('menu-intervals').classList.add('active'); document.getElementById('menu-chords').classList.remove('active'); });
+  updateAllowedIntervals();
+  intervalTrainer.startNew();
+  document.getElementById('next-manual').addEventListener('click', ()=>{ intervalTrainer.acknowledge(); });
 
-  // interval trainer
-  const trainer = new IntervalTrainer(document.getElementById('keyboard'));
-// --- Dropdown toggle ---
-const dropdown = document.querySelector('.dropdown');
-const toggleBtn = document.getElementById('dropdown-toggle');
-toggleBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  dropdown.classList.toggle('show');
-});
+  /* ---------- Chord Trainer Section ---------- */
+  const chordTrainer = new ChordTrainerSection('chord-trainer-container','chord-next');
 
-// Ferme le menu quand on clique à l’extérieur
-window.addEventListener('click', (e) => {
-  if (!dropdown.contains(e.target)) {
-    dropdown.classList.remove('show');
+  // Définition de tous les accords
+  const chordList = [];
+
+  const chordTypes = {
+    maj: [0, 4, 7],
+    min: [0, 3, 7],
+    dim: [0, 3, 6],
+    aug: [0, 4, 8],
+    sus2: [0, 2, 7],
+    sus4: [0, 5, 7],
+    '7': [0, 4, 7, 10],
+    maj7: [0, 4, 7, 11],
+    m7: [0, 3, 7, 10],
+    m7b5: [0, 3, 6, 10],
+    dim7: [0, 3, 6, 9],
+    '7sus4': [0, 5, 7, 10],
+    '7b9': [0, 4, 7, 10, 13],
+    'maj7#11': [0, 4, 7, 11, 18],
+  };
+
+  const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+  for (const root of notes) {
+    const rootIndex = notes.indexOf(root);
+    for (const [typeName, intervals] of Object.entries(chordTypes)) {
+      const correctNotes = intervals.map(semi => notes[(rootIndex + semi) % 12]);
+      chordList.push({ root, typeName, correctNotes });
+    }
   }
-});
 
-// --- Checkbox interval logic ---
-const checkboxes = document.querySelectorAll('.interval-box');
-const selectAllBox = document.getElementById('select-all');
+  // Setup du dropdown pour le chord trainer
+  setupDropdown('dropdown-toggle2', 'chord-type-menu');
 
-function updateAllowedIntervals() {
-  const selected = Array.from(checkboxes)
-    .filter(cb => cb.checked)
-    .map(cb => parseInt(cb.value, 10));
-  trainer.allowedIntervals = selected.length ? selected : [];
-  trainer.startNew();
+  // Gestion de "Tout sélectionner" pour les types d'accords
+  const chordTypeBoxes = document.querySelectorAll('.chord-type-box');
+  const selectAllChords = document.getElementById('select-all-chords');
+
+  selectAllChords.addEventListener('change', () => {
+    chordTypeBoxes.forEach(cb => cb.checked = selectAllChords.checked);
+    updateAllowedChordTypes();
+  });
+
+  chordTypeBoxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      if (!cb.checked) selectAllChords.checked = false;
+      if (Array.from(chordTypeBoxes).every(c => c.checked)) selectAllChords.checked = true;
+      updateAllowedChordTypes();
+    });
+  });
+
+  // Fonction pour mettre à jour les accords disponibles
+  let filteredChordList = [...chordList];
+  let currentIndex = 0;
+
+  function updateAllowedChordTypes() {
+    const selectedTypes = Array.from(chordTypeBoxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value);
+    
+    if (selectedTypes.length === 0) {
+      filteredChordList = [];
+      return;
+    }
+    
+    filteredChordList = shuffleArray(chordList.filter(chord => selectedTypes.includes(chord.typeName)));
+
+    if (filteredChordList.length > 0) {
+      currentIndex = 0;
+      chordTrainer.startChord(filteredChordList[currentIndex]);
+    }
+  }
+
+  function shuffleArray(array) {
+  const shuffled = [...array]; // on copie pour ne pas modifier l'original
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // indice aléatoire entre 0 et i
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // échange des éléments
+  }
+  return shuffled;
 }
 
-selectAllBox.addEventListener('change', () => {
-  checkboxes.forEach(cb => cb.checked = selectAllBox.checked);
-  updateAllowedIntervals();
+  // Modifier le callback onNext pour utiliser la liste filtrée
+  chordTrainer.onNext = () => {
+    if (filteredChordList.length === 0) return;
+    currentIndex = (currentIndex + 1) % filteredChordList.length;
+    chordTrainer.startChord(filteredChordList[currentIndex]);
+  };
+
+  // Initialiser
+  updateAllowedChordTypes();
+
+  /* ---------- Menu navigation ---------- */
+  const secChords = document.getElementById('chords');
+  const secIntervals = document.getElementById('intervals');
+  const secChordTrainer = document.getElementById('chord-trainer');
+
+  document.getElementById('menu-chords').addEventListener('click', ()=>{
+    secChords.style.display='block';
+    secIntervals.style.display='none';
+    secChordTrainer.style.display='none';
+    document.getElementById('menu-chords').classList.add('active');
+    document.getElementById('menu-intervals').classList.remove('active');
+    document.getElementById('menu-chord-trainer').classList.remove('active');
+  });
+
+  document.getElementById('menu-intervals').addEventListener('click', ()=>{
+    secChords.style.display='none';
+    secIntervals.style.display='block';
+    secChordTrainer.style.display='none';
+    document.getElementById('menu-chords').classList.remove('active');
+    document.getElementById('menu-intervals').classList.add('active');
+    document.getElementById('menu-chord-trainer').classList.remove('active');
+  });
+
+  document.getElementById('menu-chord-trainer').addEventListener('click', ()=>{
+    secChords.style.display='none';
+    secIntervals.style.display='none';
+    secChordTrainer.style.display='block';
+    document.getElementById('menu-chords').classList.remove('active');
+    document.getElementById('menu-intervals').classList.remove('active');
+    document.getElementById('menu-chord-trainer').classList.add('active');
+  });
+
 });
 
-checkboxes.forEach(cb => {
-  cb.addEventListener('change', () => {
-    if (!cb.checked) selectAllBox.checked = false;
-    if (Array.from(checkboxes).every(c => c.checked)) selectAllBox.checked = true;
-    updateAllowedIntervals();
+// Gestion des dropdowns (corrige le problème d'ouverture/fermeture)
+document.querySelectorAll('.dropdown-toggle').forEach(button => {
+  button.addEventListener('click', function (e) {
+    e.stopPropagation(); // Empêche la fermeture immédiate
+    const dropdown = this.parentElement;
+
+    // Ferme tous les autres menus ouverts
+    document.querySelectorAll('.dropdown').forEach(d => {
+      if (d !== dropdown) d.classList.remove('show');
+    });
+
+    // Bascule l'état du menu actuel (ouvre/ferme)
+    dropdown.classList.toggle('show');
   });
 });
 
-updateAllowedIntervals();
-
-
-  trainer.startNew();
-
-  document.getElementById('next-manual').addEventListener('click', ()=>{ trainer.acknowledge(); });
-
-  // accessibility: allow spacebar to replay
-  window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); trainer.playStart(); } });
-
+// Fermer tous les menus si on clique ailleurs
+document.addEventListener('click', function () {
+  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
 });
+
 
   </script>
 </body>
