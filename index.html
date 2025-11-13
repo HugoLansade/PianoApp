@@ -1014,11 +1014,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
 
     window.addEventListener('click', (e) => {
-      if (!menu.contains(e.target)) menu.classList.remove('show');
+        // ✅ Si on clique à l'intérieur du menu (checkbox, label, etc.), ne rien faire
+        if (menu.contains(e.target) && !e.target.matches('button')) return;
+
+        // 🔴 Sinon (clic ailleurs ou sur le bouton), on ferme le menu
+        menu.classList.remove('show');
     });
   }
 
   setupDropdown('dropdown-toggle', 'interval-menu');
+
+  document.getElementById('interval-menu').addEventListener('click', (e) => {
+  e.stopPropagation();
+});
 
   const checkboxes = document.querySelectorAll('.interval-box');
   const selectAllBox = document.getElementById('select-all');
@@ -1176,26 +1184,35 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 });
 
-// Gestion des dropdowns (corrige le problème d'ouverture/fermeture)
-document.querySelectorAll('.dropdown-toggle').forEach(button => {
-  button.addEventListener('click', function (e) {
-    e.stopPropagation(); // Empêche la fermeture immédiate
-    const dropdown = this.parentElement;
+    // --- Gestion unifiée des dropdowns (intervals + chords) ---
 
-    // Ferme tous les autres menus ouverts
-    document.querySelectorAll('.dropdown').forEach(d => {
-      if (d !== dropdown) d.classList.remove('show');
+    // Ouvre/ferme le dropdown au clic sur le bouton
+    document.querySelectorAll('.dropdown-toggle').forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const dropdown = this.closest('.dropdown');
+
+        // Ferme les autres menus ouverts
+        document.querySelectorAll('.dropdown.show').forEach(d => {
+          if (d !== dropdown) d.classList.remove('show');
+        });
+
+        // Bascule l’état du menu courant
+        dropdown.classList.toggle('show');
+      });
     });
 
-    // Bascule l'état du menu actuel (ouvre/ferme)
-    dropdown.classList.toggle('show');
-  });
-});
+    // ✅ Empêche la fermeture quand on clique à l’intérieur du menu
+    document.querySelectorAll('.dropdown-content').forEach(menu => {
+      menu.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
 
-// Fermer tous les menus si on clique ailleurs
-document.addEventListener('click', function () {
-  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
-});
+    // 🔴 Ferme tous les menus quand on clique ailleurs
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown.show').forEach(d => d.classList.remove('show'));
+    });
 
 
   </script>
